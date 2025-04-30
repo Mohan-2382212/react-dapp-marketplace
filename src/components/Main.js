@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 class Main extends Component {
   render() {
+    const { web3 } = this.props;
     return (
       <div id='content'>
         <h1>Add Product</h1>
@@ -10,7 +11,7 @@ class Main extends Component {
             event.preventDefault();
             // value: Due to form field
             const name = this.productName.value;
-            const price = window.web3.utils.toWei(
+            const price = web3.utils.toWei(
               this.productPrice.value.toString(),
               'Ether'
             );
@@ -64,7 +65,7 @@ class Main extends Component {
                   <th scope='row'>{product.id.toString()}</th>
                   <td>{product.name}</td>
                   <td>
-                    {window.web3.utils.fromWei(
+                    {web3.utils.fromWei(
                       product.price.toString(),
                       'Ether'
                     )}{' '}
@@ -74,13 +75,15 @@ class Main extends Component {
                   <td>
                     {!product.purchased ? (
                       <button
+                        className='btn btn-primary'
                         name={product.id}
                         value={product.price}
                         onClick={event => {
-                          this.props.purchaseProduct(
-                            event.target.name,
-                            event.target.value
-                          );
+                          event.preventDefault();
+                          const productId = event.target.name;
+                          const productPrice = event.target.value;
+                          console.log('Attempting to purchase:', { productId, productPrice });
+                          this.props.purchaseProduct(productId, productPrice);
                         }}
                       >
                         Buy
